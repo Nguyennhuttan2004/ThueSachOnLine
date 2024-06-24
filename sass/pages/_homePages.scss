@@ -1,0 +1,235 @@
+header{
+    background-color: aliceblue;
+    padding: 20px 0;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    .header_content{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        @media screen  and (max-width:576px){
+            display: block;
+        }
+        .header_logo{
+            a{
+                @include styleText($blue-1,$fw-bold,$fs-xl);
+                
+            }
+            i{
+                padding-right: 5px;
+            }
+        }
+        .header_search{
+            form{
+                display: flex;
+                border-radius: 15px;
+                .input_search{
+                    @include styleInput($fs-base,$fw-normal,$blue-1,$white,3px);
+                }
+                .btn_search{
+                       @include styleButton($white,$blue-1,none,3px);
+                }
+
+            }
+           
+        }
+
+    }
+}
+
+
+.banner{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 50px 0;
+    background-position: bottom;
+     .banner_content{
+        display: flex;
+        align-items: center;
+        .banner_content_text{
+            width: 50%;
+            h1{
+                @include styleText($blue-1,$fw-bold,$fs-h1);
+            }
+
+            .sub-title{
+                @include styleText($blue-2,$fw-bold,$fs-lg);
+                margin: 10px 0;
+                display: inline-block;
+            }
+        }
+
+        .banner_content_image{
+            width: 50%;
+            img{
+                width: 100%;
+            }
+        }
+     }
+}
+
+
+.product{
+    padding:50px 0;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+    .product_title{
+        margin-bottom: 50px;
+        h2{
+            text-align: center;
+            @include styleText($blue-1,$fw-bold,$fs-2xl);
+        }
+    }
+    .product_content{
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 30px;
+
+        @media screen and (max-width:576px) {
+            grid-template-columns: 1fr;
+        }
+        .product_item{
+            padding: 30px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            animation-name: zoomIn;
+            animation-duration: 2s;
+            opacity: 0;
+            animation-fill-mode: forwards;
+            @for $i from 2 through 3{
+                &:nth-child(#{$i}){
+                    animation-delay:($i *2s)-2s ;
+                 }
+            }
+            img{
+                width: 100%;
+            }
+
+            h3{
+                @include styleText($blue-1,$fw-bold,$fs-xl);
+                display: flex;
+                justify-content: space-between;
+                margin: 10px 0;
+            }
+
+            p{
+                @include styleText($blue-2,$fw-bold,$fs-lg);
+            }
+
+            .item-action{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .item-rate{
+                    color:$yellow-1;
+                }
+                .item-buy-now{
+                    @include styleButton($white,$blue-1,none,1px);  
+                }
+            }
+        }
+    }
+}
+
+
+footer{
+    background-color: aliceblue;
+    .footer_content{
+        display: flex;
+        padding: 70px 0;
+        position: relative;
+        .footer_item{
+            width: 25%;
+            .footer_contact{
+                li{
+                    padding: 8px 0;
+                    display: flex;
+                    align-items: center;
+                    i {
+                        color: $white;
+                        height: 40px;
+                        width: 40px;
+                        line-height: 40px;
+                        margin-right: 10px;
+                        text-align: center;
+                        background: $blue-1;
+                        display: block;
+                        border-radius: 50px;
+                      }
+                }
+            }
+            h4{
+                @include styleText($blue-1,$fw-bold,$fs-xl);
+                margin-bottom: 20px;
+                padding-bottom: 10px;   
+         
+            }
+            li{
+                padding: 0.5rem 0;
+                font-weight: $fw-bold;
+                margin-right: 10px;
+            }
+            a{
+                @include styleText ($blue-2,$fw-medium,$fs-base);
+                transition: all 0.5s;
+            }
+            a:hover{
+                color: $black;
+                font-weight: bold;
+            }
+            .footer_soicial{
+                display:grid;
+                grid-template-columns: repeat(1,2fr);
+                gap: 20px;
+                .item_soicial{
+                    justify-content: space-between;
+                    display: flex;
+                    a{
+                    height: 32px;
+                    width: 32px;
+                    line-height: 32px;
+                    text-align: center;
+                    border-radius: 50px;
+                    font-size: 14px;
+                    color: $white;
+                    background-color:$blue-1;
+                    opacity: 0.8;
+                    transition: all 0.5s;
+                    }
+                    a:hover{
+                        font-weight: lighter;
+                        color: black;
+                    }
+                 
+                }
+            }
+               
+
+
+        }
+    }
+    .footer_copyright{
+        background-color: #FAF7E4;
+        padding:20px;
+        text-align: center;
+        a{
+            color: $blue-1;
+            font-weight: $fw-bold;
+        }
+    }
+}
+
+.back_to_top {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 8px;
+    text-align: center;
+    background: $blue-1;
+    font-weight: bold;
+    color: #fff;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 20px;
+    transition: all 0.5s;
+    box-shadow: -4px 4px 24px -10px #FAF7E4;
+  }

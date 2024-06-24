@@ -1,0 +1,126 @@
+body{
+    background:#427F93;
+    background-position: center;
+    background-size:cover;
+    background-repeat: no-repeat;
+    width: 400px;
+    height: 800px;
+}
+
+.wrapper .SignUp {
+    margin-top: 10px ;
+    width: 200px;
+    height: 50px;
+    font-size: 15px;
+    font-weight: 500;
+    background-image: linear-gradient(
+      to right,
+      white 0,
+      #f8ae56 100%,
+      #f55f8d 51%
+    );
+    cursor: pointer;
+    color: white;
+    text-transform: uppercase;
+    border-radius: 30px;
+    background-size: 200%;
+    transition: all 0.5s;
+  }
+ .wrapper .SignUp:hover {
+    background-position: right center;
+  }
+
+
+  .wrapper{
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 600px;
+    text-align: center;
+    border: 1px solid rgb(241,241,241);
+    border-radius: 12px;
+    padding: 10px 20px;
+    background: transparent;
+    backdrop-filter: blur(6px);
+    box-shadow: 5px 5px 10px 0 rgba(0,0,0,0.5); 
+
+}
+
+.wrapper h2{
+    font-size: 30px;
+    color: #fffefe;
+    padding-top: 20px;
+    font-weight: bold;
+    padding-bottom: 60px;
+}
+.mb-3{
+    position: relative;
+    padding-bottom: 5px;
+}
+.mb-3 .form-label {
+    color: white;
+}
+
+.mb-3 input[type="text"]:not(:focus)::placeholder,
+.mb-3 input[type="email"]:not(:focus)::placeholder,
+.mb-3 input[type="password"]:not(:focus)::placeholder,
+.mb-3 input[type="password"]:not(:focus)::placeholder{
+    transform: translateY(0%);
+    transition: transform 0.2s ease-in-out;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.mb-3 input[type="text"],
+.mb-3 input[type="email"],
+.mb-3 input[type="password"],
+.mb-3 input[type="password"]{
+
+    border-radius: 10px;
+    background: transparent;
+    margin: 15px;
+    border: 2px solid rgb(255,255,255);
+    width: 280px;
+    height: 2px;
+    padding: 20px 40px 20px 20px;
+    backdrop-filter: blur(15px);
+}
+
+input::placeholder{
+    color: rgb(255,255,255);
+}
+
+.mb-3 input[type="text"]:focus::placeholder,
+.mb-3 input[type="email"]:focus::placeholder,
+.mb-3 input[type="password"]:focus::placeholder,
+.mb-3 input[type="password"]:focus::placeholder{
+    transform: translateY(-75%);
+    transition: transform 0.2s ease-in-out;
+    font-size: 14px;
+}
+a.Login{
+    text-decoration: none;
+    color: rgb(255,255,255, 0.712);
+    transition: all 0.5s;
+}
+a.Login:hover{
+    text-decoration: underline;
+    color:white;
+    padding-left: 5px;
+}
+
+a.forgot {
+    text-decoration: none;
+    color: rgb(255,255,255, 0.712);
+    transition: all 0.5s;
+}
+a.forgot:hover{
+    text-decoration: underline;
+    color:#fffffffd;
+    padding-left: 5px;
+}

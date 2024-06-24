@@ -1,0 +1,21 @@
+.footer_item h4{
+    position: relative;
+}
+.footer_item h4::before,
+.footer_item h4::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  border-radius: 20px;
+  background: #427F93;
+  background-size: 200%;
+}
+.footer_item h4::before {
+  width: 15px;
+}
+.footer_item h4::after {
+  width: 45px;
+  left: 20px;
+}
