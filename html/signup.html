@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Title</title>
+    <link rel="shortcut icon" href="../image/avatar.jpg" type="image/x-icon">
+    <title>Sign Up</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta
@@ -23,7 +24,7 @@
     <div class="wrapper">
       <div class="container">
         <h2>Sign Up</h2>
-        <form action="#">
+        <form id="formSignup" action="#">
           <div class="mb-3">
             <input
               type="text"
@@ -66,14 +67,14 @@
               <a href="Login.html" class="Login">Login</a>
             </div>
           </div>
-          <input
+          <button
             type="submit"
             id="SignUp"
             class="SignUp mb-4 mt-4"
             value="sign up"
           >
             Sign Up
-          </input>
+          </button>
         </form>
       </div>
     </div>
@@ -100,7 +101,7 @@
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
       import {
         getAuth,
-        createUserWithEmailAndPassword,
+        createUserWithEmailAndPassword
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
@@ -113,7 +114,7 @@
         projectId: "userdatabase-4a8ad",
         storageBucket: "userdatabase-4a8ad.appspot.com",
         messagingSenderId: "675019003763",
-        appId: "1:675019003763:web:55b76ad80d1d17ddff5706",
+        appId: "1:675019003763:web:55b76ad80d1d17ddff5706"
       };
 
       // Initialize Firebase
@@ -132,7 +133,7 @@
             // Signed up
             const user = userCredential.user;
 
-            set(ref(database, 'users/' + user.uid), {
+            set(ref(db, 'users/' + user.uid), {
               username: username,
               email: email
             });
