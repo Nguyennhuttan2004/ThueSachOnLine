@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="shortcut icon" href="../image/avatar.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="../image/avatar.jpg" type="image/x-icon" />
     <title>Sign Up</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
@@ -35,6 +35,8 @@
               placeholder="Tên đăng nhập"
             />
           </div>
+          <div id="userNameErr" style="position: absolute; top: 32%; left: 17%; color:#F9D211;display: none;">Tên không được để trống</div>
+       
 
           <div class="mb-3">
             <input
@@ -47,6 +49,7 @@
             />
             <i class="fa-solid fa-user"></i>
           </div>
+          <div id="emailErr" style="position: absolute; top: 48%; left: 17%; color:#F9D211;display: none;">Email không được để trống</div>
           <div class="mb-3">
             <input
               type="password"
@@ -58,6 +61,7 @@
             />
             <i class="fa-solid fa-lock"></i>
           </div>
+          <div id="passErr" style="position: absolute; top: 63%; left: 17%; color:#F9D211; display: none;">Password không được để trống</div>
 
           <div class="form-footer d-flex justify-content-lg-between">
             <div class="right">
@@ -96,12 +100,12 @@
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import {
         getDatabase,
-        set,    
-        ref
+        set,
+        ref,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
       import {
         getAuth,
-        createUserWithEmailAndPassword
+        createUserWithEmailAndPassword,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
@@ -114,7 +118,7 @@
         projectId: "userdatabase-4a8ad",
         storageBucket: "userdatabase-4a8ad.appspot.com",
         messagingSenderId: "675019003763",
-        appId: "1:675019003763:web:55b76ad80d1d17ddff5706"
+        appId: "1:675019003763:web:55b76ad80d1d17ddff5706",
       };
 
       // Initialize Firebase
@@ -133,19 +137,26 @@
             // Signed up
             const user = userCredential.user;
 
-            set(ref(db, 'users/' + user.uid), {
+            set(ref(db, "users/" + user.uid), {
               username: username,
-              email: email
+              email: email,
             });
 
             alert("Đăng ký thành công!");
+            setTimeout(function(){
+            window.location.href = "login.html";
+          },1000);
           })
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             alert(errorMessage);
           });
+        
+          
       });
+       
     </script>
+    <script src="./../js/signup.js"></script>
   </body>
 </html>

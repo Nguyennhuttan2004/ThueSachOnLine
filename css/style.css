@@ -52,6 +52,10 @@ header .header_content .header_logo a {
 header .header_content .header_logo i {
   padding-right: 5px;
 }
+header .header_content .header_search {
+  display: flex;
+  justify-content: space-between;
+}
 header .header_content .header_search form {
   display: flex;
   border-radius: 15px;
@@ -79,6 +83,19 @@ header .header_content .header_search form .btn_search {
 header .header_content .header_search form .btn_search:hover {
   color: #427F93;
   background-color: #ffffff;
+}
+header .header_content .header_search ul {
+  display: flex;
+  margin-left: 20px;
+  align-items: center;
+}
+header .header_content .header_search ul li {
+  padding-left: 20px;
+}
+header .header_content .header_search ul li a {
+  font-size: 18px;
+  font-weight: 700;
+  color: #427F93;
 }
 
 .banner {
