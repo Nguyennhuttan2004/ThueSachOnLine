@@ -46,7 +46,7 @@ document.getElementById("SignUp").addEventListener("click", (e) => {
 
       alert("Đăng ký thành công!");
       setTimeout(function(){
-      window.location.href = "login.html";
+      window.location.href = "./../html/login.html";
     },1000);
     })
     .catch((error) => {
