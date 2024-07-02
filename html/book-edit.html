@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/book-edit.css">
+    <title>Book Editing</title>
+</head>
+<body>
+    <div class="container">
+        <div class="left-side">
+            <h2>Xin chào, @Name</h2>
+            <nav>
+                <ul>
+                    <li><img src="/image/icon-home.svg"><a href="#">Trang chủ</a></li>
+                    <li><img src="/image/icon-book.svg"><a href="#">Sách</a></li>
+                    <li><img src="/image/icon-report.svg"><a href="#">Báo cáo</a></li>
+                    <li><img src="/image/icon-log-out.svg"><a href="#">Đăng xuất</a></li>
+                </ul>                
+            </nav>
+        </div>
+        <div class="right-side">
+            <section class="edit-book">
+                <div class="header">
+                    <div class="back">
+                        <img class="icon-back" src="/image/icon-back.svg" alt="Back" id="back-button" onclick="goBack()">
+                        <h3>Sách</h3>
+                    </div>
+                    <div class="h2-border">
+                        <h2>CHỈNH SỬA</h2>
+                    </div>
+                    <div class="search-box">
+                        <img src="/image/icon-search.svg" alt="Search Icon" class="search-icon">
+                        <input type="text" placeholder="Tìm kiếm..." id="search-input" oninput="searchBooks()">
+                    </div>
+                </div>                
+                <div class="line"></div>
+                <div class="main-content">
+                    <div class="left-side-content">
+                        <div class="book-image">
+                            <img src="/image/book-image.png" alt="Book Image 1" class="book-image" onclick="changeMainImage(this)">
+                        </div>
+                        <div class="book-image">
+                            <img src="/image/book-image.png" alt="Book Image 2" class="book-image" onclick="changeMainImage(this)">
+                        </div>
+                    </div>
+                    <form id="book-form" class="right-side-content">
+                        <div class="form-group">
+                            <label for="book-id">Mã sách</label>
+                            <input type="text" id="book-id" name="book-id" value="S22-MPL03" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="title">Tiêu đề</label>
+                            <input type="text" id="title" name="title" value="Pháp luật">
+                        </div>
+                        <div class="form-group">
+                            <label for="author">Tác giả</label>
+                            <input type="text" id="author" name="author" value="Trần Văn A & Công ty B">
+                        </div>
+                        <div class="form-group">
+                            <label for="publisher">Nhà xuất bản</label>
+                            <input type="text" id="publisher" name="publisher" value="Công ty B">
+                        </div>
+                        <div class="form-group">
+                            <label for="publish-date">Năm xuất bản</label>
+                            <input type="date" id="publish-date" name="publish-date" value="2022-09-01">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Thể loại</label>
+                            <select id="category" name="category">
+                                <option value="Pháp luật">Pháp luật</option>
+                                <!-- Other categories -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="chapters">Số chương</label>
+                            <input type="number" id="chapters" name="chapters" value="27">
+                        </div>
+                        <div class="form-group">
+                            <label for="pages">Số trang</label>
+                            <input type="number" id="pages" name="pages" value="514">
+                        </div>
+                        <div class="form-group">
+                            <label for="rent-price">Giá thuê</label>
+                            <input type="number" id="rent-price" name="rent-price" value="134000">
+                        </div>
+                        <div class="form-group">
+                            <label for="book-state">Trạng thái</label>
+                            <select id="book-state" name="book-state">
+                                <option value="Mới">Mới</option>
+                                <option value="Cũ">Cũ</option>
+                                <!-- Other categories -->
+                            </select>
+                        </div>
+                        <button type="submit" class="edit-button">Xác nhận</button>
+                    </form>
+                    </div>                
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="../js/main.js"></script>
+</body>
+</html>
