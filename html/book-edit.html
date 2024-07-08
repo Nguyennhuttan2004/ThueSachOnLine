@@ -38,16 +38,22 @@
                 <div class="main-content">
                     <div class="left-side-content">
                         <div class="book-image">
-                            <img src="/image/book-image.png" alt="Book Image 1" class="book-image" onclick="changeMainImage(this)">
-                        </div>
+                            <label for="fileInput1">
+                                <img id="image-1" src="/image/book-image.png" alt="Book Image" onclick="">
+                            </label>
+                            <input type="file" id="fileInput1" accept="image/*" style="display: none;" onchange="handleImageUpload(event, 'image-1')">
+                        </div>         
                         <div class="book-image">
-                            <img src="/image/book-image.png" alt="Book Image 2" class="book-image" onclick="changeMainImage(this)">
-                        </div>
+                            <label for="fileInput2">
+                                <img id="image-2" src="/image/book-image.png" alt="Book Image" onclick="">
+                            </label>
+                            <input type="file" id="fileInput2" accept="image/*" style="display: none;" onchange="handleImageUpload(event, 'image-2')">
+                        </div>                                                              
                     </div>
                     <form id="book-form" class="right-side-content">
                         <div class="form-group">
                             <label for="book-id">Mã sách</label>
-                            <input type="text" id="book-id" name="book-id" value="S22-MPL03" readonly>
+                            <input type="text" id="book-id" name="book-id" value="S22-MPL03">
                         </div>
                         <div class="form-group">
                             <label for="title">Tiêu đề</label>
@@ -92,7 +98,7 @@
                                 <!-- Other categories -->
                             </select>
                         </div>
-                        <button type="submit" class="edit-button">Xác nhận</button>
+                        <button type="submit" class="edit-button">Xác nhận</button>                    
                     </form>
                     </div>                
                 </div>
@@ -100,5 +106,93 @@
         </div>
     </div>
     <script src="../js/main.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getStorage, ref, uploadBytes } from "firebase/storage";
+    
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCS7Td5JGz4eNmpRUblaq87ZGJo0j6JDnk",
+            authDomain: "erudite-realm-330607.firebaseapp.com",
+            databaseURL: "https://erudite-realm-330607-default-rtdb.firebaseio.com",
+            projectId: "erudite-realm-330607",
+            storageBucket: "erudite-realm-330607.appspot.com",
+            messagingSenderId: "263875298921",
+            appId: "1:263875298921:web:b36cdc114fee96cf4704f8",
+            measurementId: "G-N6ZMKN5974"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+        const storage = getStorage();
+        const storageRef = ref(storage, 'some-child');
+    
+        // Add event listener to the form
+        document.getElementById("book-form").addEventListener("submit", function(e) {
+            e.preventDefault(); // Prevent the form from submitting the traditional way
+    
+            // Get the form data
+            const bookId = document.getElementById("book-id").value;
+            const title = document.getElementById("title").value;
+            const author = document.getElementById("author").value;
+            const publisher = document.getElementById("publisher").value;
+            const publishDate = document.getElementById("publish-date").value;
+            const category = document.getElementById("category").value;
+            const chapters = document.getElementById("chapters").value;
+            const pages = document.getElementById("pages").value;
+            const rentPrice = document.getElementById("rent-price").value;
+            const bookState = document.getElementById("book-state").value;
+    
+            // Set the data in Firebase Realtime Database
+            set(ref(db, "books/" + bookId), {
+                title: title,
+                author: author,
+                publisher: publisher,
+                publishDate: publishDate,
+                category: category,
+                chapters: chapters,
+                pages: pages,
+                rentPrice: rentPrice,
+                bookState: bookState
+            }).then(() => {
+                console.log("Data saved successfully.");
+            }).catch((error) => {
+                console.error("Error saving data: ", error);
+            });
+        });      
+
+        // function openFileExplorer() {
+        //     document.getElementById('fileInput').click();
+        // }
+
+        // function handleImageUpload(event) {
+        //     const file = event.target.files[0];
+        //     const storageRef = firebase.storage().ref();
+        //     const imageRef = storageRef.child('images/' + file.name);
+
+        //     imageRef.put(file).then(function(snapshot) {
+        //         console.log('Image uploaded successfully');
+        //         snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        //             // Update the preview image with the download URL
+        //             document.getElementById(image).src = downloadURL;
+        //             document.getElementById(image).alt = file.name;
+        //         });
+        //     }).catch(function(error) {
+        //         console.error('Error uploading image: ', error);
+        //     });
+        // }
+
+        // 'file' comes from the Blob or File API
+        uploadBytes(storageRef, file).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+        });
+        
+    </script>
+    
 </body>
 </html>
