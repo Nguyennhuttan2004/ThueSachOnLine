@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/book-add.css">
+    <title>Book Editing</title>
+</head>
+<body>
+    <div class="container">
+        <div class="left-side">
+            <h2>Xin chào, @Name</h2>
+            <nav>
+                <ul>
+                    <li><img src="/image/icon-home.svg"><a href="#">Trang chủ</a></li>
+                    <li><img src="/image/icon-book.svg"><a href="book-list.html">Sách</a></li>
+                    <li><img src="/image/icon-report.svg"><a href="#">Báo cáo</a></li>
+                    <li><img src="/image/icon-log-out.svg"><a href="#">Đăng xuất</a></li>
+                </ul>                
+            </nav>
+        </div>
+        <div class="right-side">
+            <section class="edit-book">
+                <div class="header">
+                    <div class="back">
+                        <img class="icon-back" src="/image/icon-back.svg" alt="Back" id="back-button" onclick="window.location.href='book-list.html'">
+                        <h3>Sách</h3>
+                    </div>
+                    <div class="h2-border">
+                        <h2>THÊM SÁCH</h2>
+                    </div>
+                    <div class="search-box">
+                        <img src="/image/icon-search.svg" alt="Search Icon" class="search-icon">
+                        <input type="text" placeholder="Tìm kiếm..." id="search-input" oninput="searchBooks()">
+                    </div>
+                </div>                
+                <div class="line"></div>
+                <div class="main-content">
+                    <div class="left-side-content">
+                        <div class="book-image">
+                            <img src="/image/book-image.png" alt="Book Image 1" class="book-image" onclick="selectImage()">
+                            <input type="file" id="imageInput" style="display: none;">
+                        </div>
+                        <div class="book-image">
+                            <img src="/image/book-image.png" alt="Book Image 2" class="book-image" onclick="selectImage()">
+                            <input type="file" id="imageInput" style="display: none;">
+                        </div>  
+                        <script>
+                            function selectImage() {
+                              const imageInput = document.getElementById('imageInput');
+                              imageInput.click();
+                            }
+                        
+                            imageInput.addEventListener('change', function(event) {
+                              if (event.target.files && event.target.files[0]) {
+                                const reader = new FileReader();
+                                reader.onload = function(event) {
+                                  const image = document.getElementById('bookImage');
+                                  image.src = event.target.result;
+                                };
+                                reader.readAsDataURL(event.target.files[0]);
+                              }
+                            });
+                            
+                            reader.onload = function(event) {
+                                const imageUrl = event.target.result;
+                                const imageElement = document.createElement('img');
+                                imageElement.src = imageUrl;
+                                imageElement.alt = 'Book Image 1';
+                                mageElement.alt = 'Book Image 2';
+
+                              // Thêm hình ảnh vào một phần tử trong DOM
+                              const imageContainer = document.getElementById('image-container');
+                              imageContainer.appendChild(imageElement);
+};
+                          </script>     
+                    </div>
+                    <form id="book-form" class="right-side-content">
+                        <div class="form-group">
+                            <label for="book-id">Mã sách</label>
+                            <input type="text" id="book-id" name="book-id" value=""
+                            @Html.ValidationMessageFor(id = "book-id" value = "", new { @class = "text-danger" })>   
+                        </div>
+                        <div class="form-group">
+                            <label for="title">Tiêu đề</label>
+                            <input type="text" id="title" name="title" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="author">Tác giả</label>
+                            <input type="text" id="author" name="author" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="publisher">Nhà xuất bản</label>
+                            <input type="text" id="publisher" name="publisher" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="publish-date">Năm xuất bản</label>
+                            <input type="date" id="publish-date" name="publish-date" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Thể loại</label>
+                            <select id="category" name="category">
+                                <option value="Pháp luật">None</option>
+                                <option value="Pháp luật">Pháp luật</option>
+                                <option value="Pháp luật">Lịch sử</option>
+                                <option value="Pháp luật">Hóa học</option>
+                                <!-- Other categories -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="chapters">Số chương</label>
+                            <input type="number" id="chapters" name="chapters" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="pages">Số trang</label>
+                            <input type="number" id="pages" name="pages" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="rent-price">Giá thuê</label>
+                            <input type="number" id="rent-price" name="rent-price" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="book-state">Trạng thái</label>
+                            <select id="book-state" name="book-state">
+                                <option value="Mới">None</option>
+                                <option value="Mới">Mới</option>
+                                <option value="Cũ">Cũ</option>
+                                <!-- Other categories -->
+                            </select>
+                        </div>
+                        <button type="submit" class="edit-button"
+                        @Html.ValidationMessageFor(id = "book-id" value = "", new { @class = "text-danger" })
+                        onclick="window.location.href='book-list.html'">Xác nhận</button>
+                    </form>
+                    </div>                
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="../js/main.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+    
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCS7Td5JGz4eNmpRUblaq87ZGJo0j6JDnk",
+            authDomain: "erudite-realm-330607.firebaseapp.com",
+            databaseURL: "https://erudite-realm-330607-default-rtdb.firebaseio.com",
+            projectId: "erudite-realm-330607",
+            storageBucket: "erudite-realm-330607.appspot.com",
+            messagingSenderId: "263875298921",
+            appId: "1:263875298921:web:b36cdc114fee96cf4704f8",
+            measurementId: "G-N6ZMKN5974"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+    
+        // Add event listener to the form
+        document.getElementById("book-form").addEventListener("submit", function(e) {
+            e.preventDefault(); // Prevent the form from submitting the traditional way
+    
+            // Get the form data
+            const bookId = document.getElementById("book-id").value;
+            const title = document.getElementById("title").value;
+            const author = document.getElementById("author").value;
+            const publisher = document.getElementById("publisher").value;
+            const publishDate = document.getElementById("publish-date").value;
+            const category = document.getElementById("category").value;
+            const chapters = document.getElementById("chapters").value;
+            const pages = document.getElementById("pages").value;
+            const rentPrice = document.getElementById("rent-price").value;
+            const bookState = document.getElementById("book-state").value;
+    
+            // Set the data in Firebase Realtime Database
+            set(ref(db, "books/" + bookId), {
+                title: title,
+                author: author,
+                publisher: publisher,
+                publishDate: publishDate,
+                category: category,
+                chapters: chapters,
+                pages: pages,
+                rentPrice: rentPrice,
+                bookState: bookState
+            }).then(() => {
+                console.log("Data saved successfully.");
+            }).catch((error) => {
+                console.error("Error saving data: ", error);
+            });
+        });
+    </script>
+</body>
+</html>

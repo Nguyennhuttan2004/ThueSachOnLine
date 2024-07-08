@@ -16,13 +16,14 @@
 
       // Your web app's Firebase configuration
       const firebaseConfig = {
-        apiKey: "AIzaSyDyNS8h2Q-I0jOrgcxAoFohootXRFThZs0",
-        authDomain: "userdatabase-4a8ad.firebaseapp.com",
-        databaseURL: "https://userdatabase-4a8ad-default-rtdb.firebaseio.com/",
-        projectId: "userdatabase-4a8ad",
-        storageBucket: "userdatabase-4a8ad.appspot.com",
-        messagingSenderId: "675019003763",
-        appId: "1:675019003763:web:55b76ad80d1d17ddff5706",
+        apiKey: "AIzaSyCS7Td5JGz4eNmpRUblaq87ZGJo0j6JDnk",
+        authDomain: "erudite-realm-330607.firebaseapp.com",
+        databaseURL: "https://erudite-realm-330607-default-rtdb.firebaseio.com",
+        projectId: "erudite-realm-330607",
+        storageBucket: "erudite-realm-330607.appspot.com",
+        messagingSenderId: "263875298921",
+        appId: "1:263875298921:web:b36cdc114fee96cf4704f8",
+        measurementId: "G-N6ZMKN5974"
       };
 
       // Initialize Firebase
