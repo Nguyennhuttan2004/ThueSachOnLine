@@ -45,35 +45,6 @@
                             <img src="/image/book-image.png" alt="Book Image 2" class="book-image" onclick="selectImage()">
                             <input type="file" id="imageInput" style="display: none;">
                         </div>  
-                        <script>
-                            function selectImage() {
-                              const imageInput = document.getElementById('imageInput');
-                              imageInput.click();
-                            }
-                        
-                            imageInput.addEventListener('change', function(event) {
-                              if (event.target.files && event.target.files[0]) {
-                                const reader = new FileReader();
-                                reader.onload = function(event) {
-                                  const image = document.getElementById('bookImage');
-                                  image.src = event.target.result;
-                                };
-                                reader.readAsDataURL(event.target.files[0]);
-                              }
-                            });
-                            
-                            reader.onload = function(event) {
-                                const imageUrl = event.target.result;
-                                const imageElement = document.createElement('img');
-                                imageElement.src = imageUrl;
-                                imageElement.alt = 'Book Image 1';
-                                mageElement.alt = 'Book Image 2';
-
-                              // Thêm hình ảnh vào một phần tử trong DOM
-                              const imageContainer = document.getElementById('image-container');
-                              imageContainer.appendChild(imageElement);
-};
-                          </script>     
                     </div>
                     <form id="book-form" class="right-side-content">
                         <div class="form-group">
@@ -128,9 +99,7 @@
                                 <!-- Other categories -->
                             </select>
                         </div>
-                        <button type="submit" class="edit-button"
-                        @Html.ValidationMessageFor(id = "book-id" value = "", new { @class = "text-danger" })
-                        onclick="window.location.href='book-list.html'">Xác nhận</button>
+                        <button type="submit" class="add-button">Xác nhận</button>
                     </form>
                     </div>                
                 </div>
@@ -138,6 +107,7 @@
         </div>
     </div>
     <script src="../js/main.js"></script>
+    
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -177,6 +147,7 @@
             const rentPrice = document.getElementById("rent-price").value;
             const bookState = document.getElementById("book-state").value;
     
+            
             // Set the data in Firebase Realtime Database
             set(ref(db, "books/" + bookId), {
                 title: title,
@@ -193,7 +164,40 @@
             }).catch((error) => {
                 console.error("Error saving data: ", error);
             });
+
+            //Redirect to book-list.html
+            window.location.href = "book-list.html";
         });
     </script>
+
+    <script>
+        function selectImage() {
+        const imageInput = document.getElementById('imageInput');
+        imageInput.click();
+        }
+
+        imageInput.addEventListener('change', function(event) {
+        if (event.target.files && event.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+            const image = document.getElementById('bookImage');
+            image.src = event.target.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+        });
+        
+        reader.onload = function(event) {
+            const imageUrl = event.target.result;
+            const imageElement = document.createElement('img');
+            imageElement.src = imageUrl;
+            imageElement.alt = 'Book Image 1';
+            mageElement.alt = 'Book Image 2';
+
+        // Thêm hình ảnh vào một phần tử trong DOM
+        const imageContainer = document.getElementById('image-container');
+        imageContainer.appendChild(imageElement);
+    };
+    </script>     
 </body>
 </html>

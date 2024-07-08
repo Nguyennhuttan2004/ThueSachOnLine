@@ -23,7 +23,7 @@
             <section class="edit-book">
                 <div class="header">
                     <div class="back">
-                        <img class="icon-back" src="/image/icon-back.svg" alt="Back" id="back-button" onclick="goBack()">
+                        <a href = "/html/book-list.html"><img class="icon-back" src="/image/icon-back.svg" alt="Back" id="back-button"></a>
                         <h3>Sách</h3>
                     </div>
                     <div class="h2-border">
@@ -106,5 +106,62 @@
         </div>
     </div>
     <script src="../js/main.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+    
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCS7Td5JGz4eNmpRUblaq87ZGJo0j6JDnk",
+            authDomain: "erudite-realm-330607.firebaseapp.com",
+            databaseURL: "https://erudite-realm-330607-default-rtdb.firebaseio.com",
+            projectId: "erudite-realm-330607",
+            storageBucket: "erudite-realm-330607.appspot.com",
+            messagingSenderId: "263875298921",
+            appId: "1:263875298921:web:b36cdc114fee96cf4704f8",
+            measurementId: "G-N6ZMKN5974"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+    
+        // Add event listener to the form
+        document.getElementById("book-form").addEventListener("submit", function(e) {
+            e.preventDefault(); // Prevent the form from submitting the traditional way
+    
+            // Get the form data
+            const bookId = document.getElementById("book-id").value;
+            const title = document.getElementById("title").value;
+            const author = document.getElementById("author").value;
+            const publisher = document.getElementById("publisher").value;
+            const publishDate = document.getElementById("publish-date").value;
+            const category = document.getElementById("category").value;
+            const chapters = document.getElementById("chapters").value;
+            const pages = document.getElementById("pages").value;
+            const rentPrice = document.getElementById("rent-price").value;
+            const bookState = document.getElementById("book-state").value;
+    
+            // Update the data in Firebase Realtime Database
+            update(ref(db, "books/" + bookId), {
+                title: title,
+                author: author,
+                publisher: publisher,
+                publishDate: publishDate,
+                category: category,
+                chapters: chapters,
+                pages: pages,
+                rentPrice: rentPrice,
+                bookState: bookState
+            }).then(() => {
+                console.log("Data saved successfully.");
+            }).catch((error) => {
+                console.error("Error saving data: ", error);
+            });
+        });
+    </script>
 </body>
 </html>
