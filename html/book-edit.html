@@ -35,72 +35,75 @@
                     </div>
                 </div>                
                 <div class="line"></div>
-                <div class="main-content">
+                <form id="book-form" class="main-content">
                     <div class="left-side-content">
                         <div class="book-image">
-                            <label for="fileInput1">
-                                <img id="image-1" src="/image/book-image.png" alt="Book Image" onclick="">
-                            </label>
-                            <input type="file" id="fileInput1" accept="image/*" style="display: none;" onchange="handleImageUpload(event, 'image-1')">
-                        </div>         
+                            <img id  = "preview-image-1" src="/image/book-image.png" alt="Book Image 1" class="book-image">
+                            <input type="file" id="image-input-1">
+                            <label for="image-input-1" class="upload-button">Tải ảnh lên</label>
+                        </div>
                         <div class="book-image">
-                            <label for="fileInput2">
-                                <img id="image-2" src="/image/book-image.png" alt="Book Image" onclick="">
-                            </label>
-                            <input type="file" id="fileInput2" accept="image/*" style="display: none;" onchange="handleImageUpload(event, 'image-2')">
-                        </div>                                                              
+                            <img id = "preview-image-2" src="/image/book-image.png" alt="Book Image 2" class="book-image">
+                            <input type="file" id="image-input-2">
+                            <label for="image-input-2" class="upload-button">Tải ảnh lên</label>
+                        </div>  
                     </div>
-                    <form id="book-form" class="right-side-content">
+                    <div class="right-side-content">
                         <div class="form-group">
                             <label for="book-id">Mã sách</label>
-                            <input type="text" id="book-id" name="book-id" value="S22-MPL03">
+                            <input type="text" id="book-id" name="book-id" value=""
+                            @Html.ValidationMessageFor(id = "book-id" value = "", new { @class = "text-danger" })>   
                         </div>
                         <div class="form-group">
                             <label for="title">Tiêu đề</label>
-                            <input type="text" id="title" name="title" value="Pháp luật">
+                            <input type="text" id="title" name="title" value="">
                         </div>
                         <div class="form-group">
                             <label for="author">Tác giả</label>
-                            <input type="text" id="author" name="author" value="Trần Văn A & Công ty B">
+                            <input type="text" id="author" name="author" value="">
                         </div>
                         <div class="form-group">
                             <label for="publisher">Nhà xuất bản</label>
-                            <input type="text" id="publisher" name="publisher" value="Công ty B">
+                            <input type="text" id="publisher" name="publisher" value="">
                         </div>
                         <div class="form-group">
                             <label for="publish-date">Năm xuất bản</label>
-                            <input type="date" id="publish-date" name="publish-date" value="2022-09-01">
+                            <input type="date" id="publish-date" name="publish-date" value="">
                         </div>
                         <div class="form-group">
                             <label for="category">Thể loại</label>
                             <select id="category" name="category">
+                                <option value="Pháp luật">None</option>
                                 <option value="Pháp luật">Pháp luật</option>
+                                <option value="Pháp luật">Lịch sử</option>
+                                <option value="Pháp luật">Hóa học</option>
                                 <!-- Other categories -->
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="chapters">Số chương</label>
-                            <input type="number" id="chapters" name="chapters" value="27">
+                            <input type="number" id="chapters" name="chapters" value="">
                         </div>
                         <div class="form-group">
                             <label for="pages">Số trang</label>
-                            <input type="number" id="pages" name="pages" value="514">
+                            <input type="number" id="pages" name="pages" value="">
                         </div>
                         <div class="form-group">
                             <label for="rent-price">Giá thuê</label>
-                            <input type="number" id="rent-price" name="rent-price" value="134000">
+                            <input type="number" id="rent-price" name="rent-price" value="">
                         </div>
                         <div class="form-group">
                             <label for="book-state">Trạng thái</label>
                             <select id="book-state" name="book-state">
+                                <option value="Mới">None</option>
                                 <option value="Mới">Mới</option>
                                 <option value="Cũ">Cũ</option>
                                 <!-- Other categories -->
                             </select>
                         </div>
-                        <button type="submit" class="edit-button">Xác nhận</button>                    
-                    </form>
-                    </div>                
+                        <button type="submit" class="edit-button">Xác nhận</button>
+                    </div>
+                    </form>               
                 </div>
             </section>
     </div>
@@ -108,7 +111,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getDatabase, ref, get, update, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
     
         // Your web app's Firebase configuration
@@ -127,23 +130,94 @@
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
+
+ 
+
+        function initApp() {
+            const imageInput1 = document.getElementById('image-input-1');
+            const imageInput2 = document.getElementById('image-input-2');
+    
+            if (imageInput1) {
+            imageInput1.addEventListener('change', function(e) {
+                uploadFile(e.target.files[0], 'preview-image-1');
+            });
+        }
+
+        if (imageInput2) {
+            imageInput2.addEventListener('change', function(e) {
+                uploadFile(e.target.files[0], 'preview-image-2');
+            });
+        }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+        function getBookIdFromQuery() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('bookId');
+    }
+
+    function getBook(bookId) {
+        if (!bookId) {
+            console.error("Invalid book ID");
+            return;
+        }
+        
+        // Reference to a specific book in Firebase Realtime Database
+        const bookRef = ref(db);
+                           
+        var bookID = document.getElementById("book-id");
+        var title = document.getElementById("title");
+        var author = document.getElementById("author");
+        var publisher = document.getElementById("publisher");
+        var publishDate = document.getElementById("publish-date");
+        var category = document.getElementById("category");
+        var chapters = document.getElementById("chapters");
+        var pages = document.getElementById("pages");
+        var rentPrice = document.getElementById("rent-price");
+        var bookState = document.getElementById("book-state");
+
+        // Get the details of the specific book from the database
+        get(child(bookRef, 'books/' + bookId)).then((snapshot) => {
+            if (snapshot.exists()) {
+                bookID.value = snapshot.key;
+                title.value = snapshot.val().title;
+                author.value = snapshot.val().author;
+                publisher.value = snapshot.val().publisher;
+                publishDate.value = snapshot.val().publishDate;
+                category.value = snapshot.val().category;
+                chapters.value = snapshot.val().chapters;
+                pages.value = snapshot.val().pages;
+                rentPrice.value = snapshot.val().rentPrice;
+                bookState.value = snapshot.val().bookState;
+            } else {
+                console.log("No data available for the specified book ID");
+            }
+        }).catch((error) => {
+            console.error("Error getting book details:", error);
+        });
+    }
+
+    const bookId = getBookIdFromQuery();
+    getBook(bookId);
+});
+
     
         // Add event listener to the form
         document.getElementById("book-form").addEventListener("submit", function(e) {
             e.preventDefault(); // Prevent the form from submitting the traditional way
     
-            // Get the form data
-            const bookId = document.getElementById("book-id").value;
-            const title = document.getElementById("title").value;
-            const author = document.getElementById("author").value;
-            const publisher = document.getElementById("publisher").value;
-            const publishDate = document.getElementById("publish-date").value;
-            const category = document.getElementById("category").value;
-            const chapters = document.getElementById("chapters").value;
-            const pages = document.getElementById("pages").value;
-            const rentPrice = document.getElementById("rent-price").value;
-            const bookState = document.getElementById("book-state").value;
-    
+                   // Get the form data
+        const bookId = document.getElementById("book-id").value;
+        const title = document.getElementById("title").value;
+        const author = document.getElementById("author").value;
+        const publisher = document.getElementById("publisher").value;
+        const publishDate = document.getElementById("publish-date").value;
+        const category = document.getElementById("category").value;
+        const chapters = document.getElementById("chapters").value;
+        const pages = document.getElementById("pages").value;
+        const rentPrice = document.getElementById("rent-price").value;
+        const bookState = document.getElementById("book-state").value;
+
             // Update the data in Firebase Realtime Database
             update(ref(db, "books/" + bookId), {
                 title: title,
@@ -157,10 +231,65 @@
                 bookState: bookState
             }).then(() => {
                 console.log("Data saved successfully.");
+                window.location.href = "book-list.html"; // Redirect after successful save
             }).catch((error) => {
                 console.error("Error saving data: ", error);
             });
         });
+
+        function uploadFile(file) {
+            // Create the file metadata
+            const metadata = {
+                contentType: 'image/jpeg' // Change this to match the actual file type
+            };
+    
+            // Upload file and metadata to the object 'img/[fileName]'
+            const bookId = document.getElementById("book-id").value;
+            const storageReference = storageRef(storage, 'books/book-' + bookId + Date.now());
+            const uploadTask = uploadBytesResumable(storageReference, file, metadata);
+    
+            // Listen for state changes, errors, and completion of the upload.
+            uploadTask.on('state_changed', 
+                function(snapshot) {
+                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                    }
+                }, 
+                function(error) {
+                    // Handle unsuccessful uploads
+                    console.error("Upload failed: ", error);
+                }, 
+                function() {
+                    const imageInput1 = document.getElementById('image-input-1');
+                    const imageInput2 = document.getElementById('image-input-2');
+
+                    if (imageInput1){
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL1) => {
+                        const img = document.getElementById('preview-image-1');
+                        img.src = downloadURL1;
+                    });
+                    }
+
+                    if(imageInput2) {
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL2) => {
+                        const img = document.getElementById('preview-image-2');
+                        img.src = downloadURL2;
+                    });
+                    }
+
+                }
+            );
+        }
+    
+        window.addEventListener('load', initApp);
     </script>
 </body>
 </html>

@@ -37,15 +37,13 @@
                 <div class="line"></div>
                 <div class="main-content">
                     <div class="left-side-content">
-                        <div id="container">
-                            <h3>Upload file using firebase</h3>
-                            <input type="file" id="fileButton" name="">
-                            <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
-                        
-                            <div id="photo-container" class="book-image">
-                                <img id="photo" src="/image/book-image.png" alt="Book Image 1" class="book-image">
-                            </div>             
-                        </div>  
+                        <div id="photo-container">
+                            <!-- <img id="photo" src="/image/book-image.png" alt="Book Image 1" class="book-image">
+                            <div class="file-buttons">
+                                <button class="edit-button" onclick="window.location.href='book-edit.html'">Chỉnh sửa</button>
+                                <button class="delete-button">Xóa</button>
+                            </div> -->
+                        </div> 
                     </div>                
                 </div>
             </section>
@@ -55,10 +53,9 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getDatabase, ref, set , get, child, remove, orderByChild} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-        import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-    
+        import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, listAll } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
         // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCS7Td5JGz4eNmpRUblaq87ZGJo0j6JDnk",
@@ -70,63 +67,155 @@
             appId: "1:263875298921:web:b36cdc114fee96cf4704f8",
             measurementId: "G-N6ZMKN5974"
         };
-    
+
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
         const storage = getStorage(app);
-    
-        var initApp = function() {
-            const fileButton = document.getElementById('fileButton');
 
-            if (fileButton) {
-                fileButton.addEventListener('change', function(e) {
-                    uploadFile(e.target.files[0]);
+        // Reference to the div where books will be listed
+        let bookDiv = document.getElementById('photo-container');
+        let count = 1;
+
+        // Function to list all books from Firebase Realtime Database
+        function listBooks() {
+             // Reference to books in Firebase Realtime Database
+            const booksRef = ref(db);
+            // Get all books from the database
+            get(child(booksRef, 'books')).then((books) => {
+                books.forEach((book) => {
+                    let bookId = book.key;
+                    let value = book.val();
+                    addBookToList(book, bookId, value);
                 });
-            }
-        };
-
-        function uploadFile(file) {
-            // Create the file metadata
-            const metadata = {
-                contentType: 'image/jpeg',
-            };
-            const storageReference = storageRef(storage, 'img/' + Date.now());
-            const uploadTask = uploadBytesResumable(storageReference, file, metadata);
-
-            // Listen for state changes, errors, and completion of the upload.
-            uploadTask.on('state_changed',
-                function(snapshot) {
-                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    document.getElementById('progressBar').value = progress;
-                    console.log('Upload is ' + progress + '% done');
-                    switch (snapshot.state) {
-                        case 'paused':
-                            console.log('Upload is paused');
-                            break;
-                        case 'running':
-                            console.log('Upload is running');
-                            break;
-                    }
-                },
-                function(error) {
-                    // Handle unsuccessful uploads
-                    console.error("Upload failed: ", error);
-                },
-                function() {
-                    // Handle successful uploads on complete
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        console.log('File available at', downloadURL);
-                        const img = document.getElementById('photo');
-                        img.src = downloadURL;
-                    });
-                }
-            );
+            });
         }
 
+        // Function to add a single book to the HTML list
+        function addBookToList(book, bookId, value) {   
+            let div = document.createElement("div");
+
+            let title = document.createElement("h3");
+            title.innerHTML = "Title: " + value.title;
+
+            let rentPrice = document.createElement("p");
+            rentPrice.innerHTML = "Price: " + value.rentPrice;
+
+            let image = document.createElement("img");
+            image.src = "https://firebasestorage.googleapis.com/v0/b/erudite-realm-330607.appspot.com/o/books%2Fbook-S22-MPL041720519255445?alt=media&token=74a08ce2-5498-4272-9804-eb9c9c9bf208";
+            image.width = 200
+
+            let fileButtons = document.createElement("div");
+            fileButtons.classList.add("file-buttons");
+
+            let editButton = document.createElement("button");
+            editButton.classList.add("edit-button");
+            editButton.textContent = "Chỉnh sửa";
+            editButton.onclick = function() {
+                window.location.href = `book-edit.html?bookId=${bookId}`;
+            };
+
+            let deleteButton = document.createElement("button");
+            deleteButton.classList.add("delete-button");
+            deleteButton.textContent = "Xóa";
+
+            deleteButton.onclick = function() {
+                remove(ref(db, 'books/' + bookId)).then(() => {
+                bookDiv.removeChild(div);
+                }).catch((error) => {
+                console.error(error);
+        });
+      };
+
+            div.append(title, rentPrice, image, editButton, deleteButton);
+            bookDiv.appendChild(div);
+            count++;
+        }
+
+        function initApp() {
+            const imageInput1 = document.getElementById('image-input-1');
+    
+            if (imageInput1) {
+            imageInput1.addEventListener('change', function(e) {
+                getFile(e.target.files[0], 'preview-image-1');
+            });
+        }
+     }
+    
+ // Function to search books
+// function searchBooks() {
+//     const searchInput = document.getElementById('search-input').value.toLowerCase().trim();
+
+//     // Clear previous search results
+//     const bookList = document.getElementById('book-list');
+//     bookList.innerHTML = '';
+
+//     // Query Firebase for books matching the search input
+//     const booksRef = ref(db, 'books');
+//     orderByChild(booksRef, 'title')
+//         .startAt(searchInput)
+//         .endAt(searchInput + '\uf8ff')
+//         .on('value', (snapshot) => {
+//             snapshot.forEach((childSnapshot) => {
+//                 const book = childSnapshot.val();
+//                 const bookId = childSnapshot.key;
+
+//                 // Create HTML elements to display each book
+//                 const bookItem = document.createElement('div');
+//                 bookItem.classList.add('book-item');
+
+//                 const title = document.createElement('h3');
+//                 title.textContent = `Title: ${book.title}`;
+//                 bookItem.appendChild(title);
+
+//                 const author = document.createElement('p');
+//                 author.textContent = `Author: ${book.author}`;
+//                 bookItem.appendChild(author);
+
+//                 const price = document.createElement('p');
+//                 price.textContent = `Price: ${book.rentPrice}`;
+//                 bookItem.appendChild(price);
+
+//                 bookList.appendChild(bookItem);
+//             });
+//         });
+// }
+
+//     const searchInput = document.getElementById('search-input').value.toLowerCase().trim();
+
+//     // Clear previous search results
+//     const bookList = document.getElementById('book-list');
+//     bookList.innerHTML = '';
+
+//     // Query Firebase for books matching the search input
+//     booksRef.orderByChild('title').startAt(searchInput).endAt(searchInput + '\uf8ff').on('value', (snapshot) => {
+//         snapshot.forEach((childSnapshot) => {
+//             const book = childSnapshot.val();
+//             const bookId = childSnapshot.key;
+
+//             // Create HTML elements to display each book
+//             const bookItem = document.createElement('div');
+//             bookItem.classList.add('book-item');
+
+//             const title = document.createElement('h3');
+//             title.textContent = book.title;
+//             bookItem.appendChild(title);
+
+//             const author = document.createElement('p');
+//             author.textContent = `Author: ${book.author}`;
+//             bookItem.appendChild(author);
+
+//             const price = document.createElement('p');
+//             price.textContent = `Price: ${book.price}`;
+//             bookItem.appendChild(price);
+
+//             bookList.appendChild(bookItem);
+//         });
+//     });
+
         window.addEventListener('load', initApp);
+        window.addEventListener('load', listBooks);
     </script>
     
 </body>

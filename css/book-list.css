@@ -147,22 +147,22 @@
                 display: flex;
                 justify-content: space-between; /* Ensure space between the two sections */
                 padding: 20px;
-            
+    
                 .left-side-content {
                     width: 40%;
                     display: flex;
                     margin-top: 10px;
                     align-items: start;
-                    flex-wrap: wrap; /* Allows multiple items to wrap onto the next line */
                     gap: 10px; /* Space between images */
             
                     .book-image {
-                        width: calc(50% - 10px); /* 50% of the parent width minus the gap */
+                        width: 100%; /* 50% of the parent width minus the gap */
                         max-width: 100%; /* Ensure images do not exceed their container's width */
                         height: auto; /* Maintain aspect ratio */
                         box-sizing: border-box; /* Ensures padding and border are included in the width */
                         display: flex;
                         justify-content: center;
+                        flex-direction: column;
                         align-items: center;
             
                         img {
@@ -170,7 +170,30 @@
                             height: auto;
                             display: block;
                         }
+                    
+                        .file-buttons{
+                            display: flex;
+                            justify-content: center;
+                            flex-direction: row;
+                            gap: 5px;
+
+                            button {
+                                width: auto;
+                                height: auto;
+                                display: block;
+                            }
+
+                            .edit-button {
+                                background: #ffc404;
+                            }
+
+                            .delete-button {
+                                background: rgb(241, 82, 82);
+                            }
+                        }
+                      
                     }
+                   
                 }
             
                 .right-side-content {
@@ -198,7 +221,6 @@
 
                 }
             }
-                      
-                
+                                  
 }
 

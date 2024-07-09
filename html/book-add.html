@@ -150,7 +150,7 @@
             const pages = document.getElementById("pages").value;
             const rentPrice = document.getElementById("rent-price").value;
             const bookState = document.getElementById("book-state").value;
-
+            const imageURL = "https://firebasestorage.googleapis.com/v0/b/erudite-realm-330607.appspot.com/o/books%2Fbook-S22-MPL041720519255445?alt=media&token=74a08ce2-5498-4272-9804-eb9c9c9bf208";
             // Set the data in Firebase Realtime Database
             set(ref(db, "books/" + bookId), {
                 title: title,
@@ -161,7 +161,8 @@
                 chapters: chapters,
                 pages: pages,
                 rentPrice: rentPrice,
-                bookState: bookState
+                bookState: bookState,
+                imageURL: imageURL
             }).then(() => {
                 console.log("Data saved successfully.");
                 window.location.href = "book-list.html"; // Redirect after successful save
@@ -169,6 +170,7 @@
                 console.error("Error saving data: ", error);
             });
         });
+
     
         function initApp() {
             const imageInput1 = document.getElementById('image-input-1');
@@ -197,7 +199,7 @@
             const bookId = document.getElementById("book-id").value;
             const storageReference = storageRef(storage, 'books/book-' + bookId + Date.now());
             const uploadTask = uploadBytesResumable(storageReference, file, metadata);
-    
+           
             // Listen for state changes, errors, and completion of the upload.
             uploadTask.on('state_changed', 
                 function(snapshot) {
