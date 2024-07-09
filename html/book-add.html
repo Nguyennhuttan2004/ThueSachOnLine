@@ -35,18 +35,20 @@
                     </div>
                 </div>                
                 <div class="line"></div>
-                <div class="main-content">
+                <form id="book-form" class="main-content">
                     <div class="left-side-content">
                         <div class="book-image">
-                            <img src="/image/book-image.png" alt="Book Image 1" class="book-image" onclick="selectImage()">
-                            <input type="file" id="imageInput" style="display: none;">
+                            <img id  = "preview-image-1" src="/image/book-image.png" alt="Book Image 1" class="book-image">
+                            <input type="file" id="image-input-1">
+                            <label for="image-input-1" class="upload-button">Tải ảnh lên</label>
                         </div>
                         <div class="book-image">
-                            <img src="/image/book-image.png" alt="Book Image 2" class="book-image" onclick="selectImage()">
-                            <input type="file" id="imageInput" style="display: none;">
+                            <img id = "preview-image-2" src="/image/book-image.png" alt="Book Image 2" class="book-image">
+                            <input type="file" id="image-input-2">
+                            <label for="image-input-2" class="upload-button">Tải ảnh lên</label>
                         </div>  
                     </div>
-                    <form id="book-form" class="right-side-content">
+                    <div class="right-side-content">
                         <div class="form-group">
                             <label for="book-id">Mã sách</label>
                             <input type="text" id="book-id" name="book-id" value=""
@@ -100,11 +102,11 @@
                             </select>
                         </div>
                         <button type="submit" class="add-button">Xác nhận</button>
-                    </form>
-                    </div>                
+                    </div>
+                    </form>                
                 </div>
             </section>
-        </div>
+        
     </div>
     <script src="../js/main.js"></script>
     
@@ -113,6 +115,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
     
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -130,6 +133,7 @@
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
+        const storage = getStorage(app);
     
         // Add event listener to the form
         document.getElementById("book-form").addEventListener("submit", function(e) {
@@ -146,8 +150,7 @@
             const pages = document.getElementById("pages").value;
             const rentPrice = document.getElementById("rent-price").value;
             const bookState = document.getElementById("book-state").value;
-    
-            
+
             // Set the data in Firebase Realtime Database
             set(ref(db, "books/" + bookId), {
                 title: title,
@@ -161,43 +164,83 @@
                 bookState: bookState
             }).then(() => {
                 console.log("Data saved successfully.");
+                window.location.href = "book-list.html"; // Redirect after successful save
             }).catch((error) => {
                 console.error("Error saving data: ", error);
             });
-
-            //Redirect to book-list.html
-            window.location.href = "book-list.html";
         });
-    </script>
-
-    <script>
-        function selectImage() {
-        const imageInput = document.getElementById('imageInput');
-        imageInput.click();
+    
+        function initApp() {
+            const imageInput1 = document.getElementById('image-input-1');
+            const imageInput2 = document.getElementById('image-input-2');
+    
+            if (imageInput1) {
+            imageInput1.addEventListener('change', function(e) {
+                uploadFile(e.target.files[0], 'preview-image-1');
+            });
         }
 
-        imageInput.addEventListener('change', function(event) {
-        if (event.target.files && event.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-            const image = document.getElementById('bookImage');
-            image.src = event.target.result;
+        if (imageInput2) {
+            imageInput2.addEventListener('change', function(e) {
+                uploadFile(e.target.files[0], 'preview-image-2');
+            });
+        }
+        }
+    
+        function uploadFile(file) {
+            // Create the file metadata
+            const metadata = {
+                contentType: 'image/jpeg' // Change this to match the actual file type
             };
-            reader.readAsDataURL(event.target.files[0]);
-        }
-        });
-        
-        reader.onload = function(event) {
-            const imageUrl = event.target.result;
-            const imageElement = document.createElement('img');
-            imageElement.src = imageUrl;
-            imageElement.alt = 'Book Image 1';
-            mageElement.alt = 'Book Image 2';
+    
+            // Upload file and metadata to the object 'img/[fileName]'
+            const bookId = document.getElementById("book-id").value;
+            const storageReference = storageRef(storage, 'books/book-' + bookId + Date.now());
+            const uploadTask = uploadBytesResumable(storageReference, file, metadata);
+    
+            // Listen for state changes, errors, and completion of the upload.
+            uploadTask.on('state_changed', 
+                function(snapshot) {
+                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                    }
+                }, 
+                function(error) {
+                    // Handle unsuccessful uploads
+                    console.error("Upload failed: ", error);
+                }, 
+                function() {
+                    const imageInput1 = document.getElementById('image-input-1');
+                    const imageInput2 = document.getElementById('image-input-2');
 
-        // Thêm hình ảnh vào một phần tử trong DOM
-        const imageContainer = document.getElementById('image-container');
-        imageContainer.appendChild(imageElement);
-    };
-    </script>     
+                    if (imageInput1){
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL1) => {
+                        const img = document.getElementById('preview-image-1');
+                        img.src = downloadURL1;
+                    });
+                    }
+
+                    if(imageInput2) {
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL2) => {
+                        const img = document.getElementById('preview-image-2');
+                        img.src = downloadURL2;
+                    });
+                    }
+
+                }
+            );
+        }
+    
+        window.addEventListener('load', initApp);
+    </script>
+    
 </body>
 </html>

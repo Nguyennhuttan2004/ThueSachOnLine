@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/book-edit.css">
+    <link rel="stylesheet" href="../css/book-list.css">
     <title>Book List</title>
 </head>
 <body>
@@ -26,8 +26,9 @@
                         <img class="icon-back" src="/image/icon-list.svg" alt="Back" id="back-button" onclick="goBack()">
                         <h3>Danh sách sách</h3>
                     </div>
-                    <button type="submit" class="edit-button" onclick="window.location.href='book-add.html'">Add New Book</button>
-    <script src="../js/main.js"></script>
+                    <button type="submit" class="add-page-button" onclick="window.location.href='book-add.html'">Thêm sách</button>
+                    <button type="submit" class="export-book-list-button">Xuất danh sách sách</button>
+                    <script src="../js/main.js"></script>
                     <div class="search-box">
                         <img src="/image/icon-search.svg" alt="Search Icon" class="search-icon">
                         <input type="text" placeholder="Tìm kiếm..." id="search-input" oninput="searchBooks()">
@@ -36,14 +37,15 @@
                 <div class="line"></div>
                 <div class="main-content">
                     <div class="left-side-content">
-                        <div class="book-image">
-                            <img src="/image/book-image.png" alt="Book Image 1" class="book-image" onclick="changeMainImage(this)">
-                        </div>
-                        <div class="book-image">
-                            <img src="/image/book-image.png" alt="Book Image 2" class="book-image" onclick="changeMainImage(this)">
-                        </div>
-                    </div>
-                    
+                        <div id="container">
+                            <h3>Upload file using firebase</h3>
+                            <input type="file" id="fileButton" name="">
+                            <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+                        
+                            <div id="photo-container" class="book-image">
+                                <img id="photo" src="/image/book-image.png" alt="Book Image 1" class="book-image">
+                            </div>             
+                        </div>  
                     </div>                
                 </div>
             </section>
@@ -55,6 +57,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
     
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -72,41 +75,60 @@
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
+        const storage = getStorage(app);
     
-        // Add event listener to the form
-        document.getElementById("book-form").addEventListener("submit", function(e) {
-            e.preventDefault(); // Prevent the form from submitting the traditional way
-    
-            // Get the form data
-            const bookId = document.getElementById("book-id").value;
-            const title = document.getElementById("title").value;
-            const author = document.getElementById("author").value;
-            const publisher = document.getElementById("publisher").value;
-            const publishDate = document.getElementById("publish-date").value;
-            const category = document.getElementById("category").value;
-            const chapters = document.getElementById("chapters").value;
-            const pages = document.getElementById("pages").value;
-            const rentPrice = document.getElementById("rent-price").value;
-            const bookState = document.getElementById("book-state").value;
-    
-            // Set the data in Firebase Realtime Database
-            set(ref(db, "books/" + bookId), {
-                title: title,
-                author: author,
-                publisher: publisher,
-                publishDate: publishDate,
-                category: category,
-                chapters: chapters,
-                pages: pages,
-                rentPrice: rentPrice,
-                bookState: bookState
-            }).then(() => {
-                console.log("Data saved successfully.");
-            }).catch((error) => {
-                console.error("Error saving data: ", error);
-            });
-        });
+        var initApp = function() {
+            const fileButton = document.getElementById('fileButton');
+
+            if (fileButton) {
+                fileButton.addEventListener('change', function(e) {
+                    uploadFile(e.target.files[0]);
+                });
+            }
+        };
+
+        function uploadFile(file) {
+            // Create the file metadata
+            const metadata = {
+                contentType: 'image/jpeg',
+            };
+            const storageReference = storageRef(storage, 'img/' + Date.now());
+            const uploadTask = uploadBytesResumable(storageReference, file, metadata);
+
+            // Listen for state changes, errors, and completion of the upload.
+            uploadTask.on('state_changed',
+                function(snapshot) {
+                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    document.getElementById('progressBar').value = progress;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                    }
+                },
+                function(error) {
+                    // Handle unsuccessful uploads
+                    console.error("Upload failed: ", error);
+                },
+                function() {
+                    // Handle successful uploads on complete
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        const img = document.getElementById('photo');
+                        img.src = downloadURL;
+                    });
+                }
+            );
+        }
+
+        window.addEventListener('load', initApp);
     </script>
+    
 </body>
 
 </html>
